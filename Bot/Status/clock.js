@@ -30,12 +30,12 @@ async function launchClientXStatusService(client)
             let data = datas[key];
             data.history = history.map(history => {
                 let domain = history.find(h => h.name == data.name);
-                if (!domain) return client.config.emote.unavailable;
-                if (domain.status == 'invalid') return client.config.emote.unavailable;
-                if (domain.status == 'offline') return client.config.emote.status_down;
-                if (domain.ping == -1) return client.config.emote.status_down;
-                if (domain.ping > 5000) return client.config.emote.status_degraded;
-                return client.config.emote.status_ok;
+                if (!domain) return '❌';
+                if (domain.status == 'invalid') return '❌';
+                if (domain.status == 'offline') return '🔴';
+                if (domain.ping == -1) return '🔴';
+                if (domain.ping > 5000) return '🟡';
+                return '🟢';
             }).join('');
         })
 

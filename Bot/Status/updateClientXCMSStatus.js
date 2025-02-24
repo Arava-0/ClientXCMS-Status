@@ -27,9 +27,15 @@ async function updateClientXCMSStatusMessage(client, channelID, messageID, datas
 
     Object.keys(datas).forEach(key => {
         let data = datas[key];
+        let emote = client.config.emote.status_ok;
+        if (domain.status == 'invalid') emote = client.config.emote.unavailable;
+        if (domain.status == 'offline') emote = client.config.emote.status_down;
+        if (domain.ping == -1) emote = client.config.emote.status_down;
+        if (domain.ping > 5000) emote = client.config.emote.status_degraded;
+
         embed.addFields(
             {
-                name: `${client.config.emote.logo} > **${data.name}**`,
+                name: `${client.config.emote.logo} > ${emote} **${data.name}**`,
                 value: `\`\`\`yaml\n` +
                 `Ping: ${data.ping}ms\n` +
                 `Historique: ${data.history}\n` +
@@ -42,9 +48,9 @@ async function updateClientXCMSStatusMessage(client, channelID, messageID, datas
     embed.addFields({
         name: `${client.config.emote.logo} > **LÉGENDE DES STATUTS**`,
         value: `\`\`\`diff\n` +
-        `+ ${client.config.emote.status_ok} En ligne\n` +
-        `! ${client.config.emote.status_degraded} Dégradé\n` +
-        `- ${client.config.emote.status_down} Hors ligne\n` +
+        `+ 🟢 En ligne\n` +
+        `! 🟡 Dégradé\n` +
+        `- 🔴 Hors ligne\n` +
         `\`\`\``,
         inline: false
     })
