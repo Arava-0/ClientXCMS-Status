@@ -45,8 +45,10 @@ async function launchClientXStatusService(client)
         } catch (error) {
             if (error.message == "ERR_CHANNEL_NOT_FOUND")
                 await removeChannelFromConfig(client);
-            if (error.message == "ERR_MESSAGE_NOT_FOUND")
+            else if (error.message == "ERR_MESSAGE_NOT_FOUND")
                 await removeMessageFromConfig(client);
+            else
+                Core.showError("CLIENTXCMS Status", "Une erreur est survenue lors de la mise à jour du message de statut !", error.stack);
         }
     })
 
