@@ -1,5 +1,5 @@
 const Core = require("../../Core");
-const axios = require('axios');
+const { ping } = require("./ping");
 
 async function fetchClientXCMSStatusDatas(client, MAX_DELAY_PING = 25000)
 {
@@ -24,14 +24,12 @@ async function pingDomain(domainUrl, MAX_DELAY_PING, ACTIVE_DELAY = MAX_DELAY_PI
     let startTime = Date.now();
 
     try {
-        startTime = Date.now();
-        await axios.get(domainUrl, { timeout: ACTIVE_DELAY });
-        const endTime = Date.now();
+        const pingResult = await ping(domainUrl);
 
         return {
             domain: domainUrl,
             status: 'online',
-            ping: endTime - startTime
+            ping: pingResult
         };
     } catch (error) {
         const NEW_MAX_DELAY = ACTIVE_DELAY - (Date.now() - startTime);
