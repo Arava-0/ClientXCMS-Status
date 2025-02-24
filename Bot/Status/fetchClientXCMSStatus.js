@@ -21,9 +21,8 @@ async function fetchClientXCMSStatusDatas(client, MAX_DELAY_PING = 25000)
 }
 
 async function pingDomain(domainUrl, MAX_DELAY_PING, ACTIVE_DELAY = MAX_DELAY_PING) {
-    const startTime = Date.now();
-
     try {
+        const startTime = Date.now();
         await axios.get(domainUrl, { timeout: ACTIVE_DELAY });
         const endTime = Date.now();
 
