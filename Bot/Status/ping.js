@@ -13,7 +13,7 @@ async function ping(domain) {
     let domainName = extractDomain(domain);
 
     if (domainName === null)
-        return -1;
+        return -2;
 
     return new Promise((resolve, reject) => {
         exec(`ping -c 1 ${domainName} | awk -F'/' 'END {print $5}'`, (error, stdout, stderr) => {
