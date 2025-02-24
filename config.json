@@ -21,6 +21,10 @@
         "success": "✅",
         "warn": "⚠️",
         "loading": "<a:Loading:1343567012613459979>",
-        "logo": "<:ClientXCMSLogo:1343566547041521825>"
+        "logo": "<:ClientXCMSLogo:1343566547041521825>",
+        "status_ok": "<:STATUS_OK:1343621382591741953>",
+        "status_degraded": "<:STATUS_DEGRADED:1343621393014591588>",
+        "status_down": "<:STATUS_DOWN:1343621401642401856>",
+        "unavailable": "<:UNAVAILABLE:1343621955491729408>"
     }
 }

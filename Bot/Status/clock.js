@@ -11,7 +11,6 @@ async function launchClientXStatusService(client)
     let history = [];
     cron.schedule('0 * * * * *', async () => {
         let config = client.cache.clientXCMSConfig;
-        // console.log(config);
 
         if (Core.isNullOrUndefined(config) || Core.isNullOrUndefined(config.channelId) || Core.isNullOrUndefined(config.messageId))
             return;
@@ -31,11 +30,14 @@ async function launchClientXStatusService(client)
             let data = datas[key];
             data.history = history.map(history => {
                 let domain = history.find(h => h.name == data.name);
-                return (domain ? (domain.ping == -1 ? '🔴' : (domain.ping > 5000 ? '🟡' : '🟢')) : '🟢')
+                if (!domain) return client.config.emote.unavailable;
+                if (domain.status == 'invalid') return client.config.emote.unavailable;
+                if (domain.status == 'offline') return client.config.emote.status_down;
+                if (domain.ping == -1) return client.config.emote.status_down;
+                if (domain.ping > 5000) return client.config.emote.status_degraded;
+                return client.config.emote.status_ok;
             }).join('');
         })
-
-        console.log(datas);
 
         await Core.sleep(Core.secondes(30) - delay);
         try {
