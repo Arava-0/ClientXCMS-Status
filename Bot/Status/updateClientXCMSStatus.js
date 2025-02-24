@@ -42,9 +42,9 @@ async function updateClientXCMSStatusMessage(client, channelID, messageID, datas
     embed.addFields({
         name: `${client.config.emote.logo} > **LÉGENDE DES STATUTS**`,
         value: `\`\`\`diff\n` +
-        `+ 🟢 En ligne\n` +
-        `! 🟡 Dégradé\n` +
-        `- 🔴 Hors ligne\n` +
+        `+ ${client.config.emote.status_ok} En ligne\n` +
+        `! ${client.config.emote.status_degraded} Dégradé\n` +
+        `- ${client.config.emote.status_down} Hors ligne\n` +
         `\`\`\``,
         inline: false
     })
