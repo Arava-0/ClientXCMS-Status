@@ -37,7 +37,7 @@ async function pingDomain(domainUrl, MAX_DELAY_PING, ACTIVE_DELAY = MAX_DELAY_PI
         if (NEW_MAX_DELAY < 5000) return {
             domain: domainUrl,
             status: 'offline',
-            ping: MAX_DELAY_PING - NEW_MAX_DELAY
+            ping: -1
         };
 
         return pingDomain(domainUrl, MAX_DELAY_PING, NEW_MAX_DELAY);
