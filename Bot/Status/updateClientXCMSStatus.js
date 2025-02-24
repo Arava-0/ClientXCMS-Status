@@ -31,7 +31,7 @@ async function updateClientXCMSStatusMessage(client, channelID, messageID, datas
             {
                 name: `${client.config.emote.logo} > **${data.name}**`,
                 value: `\`\`\`yaml\n` +
-                `Ping: ${data.ping}\n` +
+                `Ping: ${data.ping}ms\n` +
                 `Historique: ${data.history}\n` +
                 `\`\`\``,
                 inline: false
