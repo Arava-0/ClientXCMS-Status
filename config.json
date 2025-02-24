@@ -5,9 +5,10 @@
     "webhookURL": "https://discord.com/api/webhooks/id/token",
 
     "presence": [
-        "Créé avec soin par Arava",
-        "Discord bot template - DJS V14",
-        "Disponible sur GitHub!"
+        "Gérez vos services avec ClientXCMS",
+        "Système de gestion pour hébergeurs",
+        "Installation en un clic disponible",
+        ">> https://clientxcms.com <<"
     ],
 
     "color": {
