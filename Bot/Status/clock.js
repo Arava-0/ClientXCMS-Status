@@ -17,15 +17,14 @@ async function launchClientXStatusService(client)
 
         let startingTimestamp = Date.now();
         let datas = await fetchClientXCMSStatusDatas(client);
-        let delay = Date.now() - startingTimestamp;
+        if (Core.isNullOrUndefined(datas)) return;
 
-        if (Core.isNullOrUndefined(datas))
-            return;
-
+        // History management
         if (history.length >= 5)
             history.shift();
         history.push(datas);
 
+        // Adding history to datas
         Object.keys(datas).forEach(key => {
             let data = datas[key];
             data.history = history.map(history => {
@@ -39,7 +38,13 @@ async function launchClientXStatusService(client)
             }).join('');
         })
 
+        // Sorting
+        datas.sort((a, b) => a.name.localeCompare(b.name))
+
+        // Delay management
+        let delay = Date.now() - startingTimestamp;
         await Core.sleep(Core.secondes(30) - delay);
+
         try {
             await updateClientXCMSStatusMessage(client, config.channelId, config.messageId, datas);
         } catch (error) {
