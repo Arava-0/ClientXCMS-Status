@@ -10,22 +10,46 @@ async function updateClientXCMSStatusMessage(client, channelID, messageID, datas
         throw new Error(`ERR_MESSAGE_NOT_FOUND`);
     });
 
-    let description = "";
-
-    Object.keys(datas).forEach(key => {
-        let data = datas[key];
-        description += `> - ${data.status == "online" ? "🟢" : "🔴"} **[${data.name}](${data.domain})** : ${data.ping}ms\n`;
+    await message.edit({
+        content: `${client.config.emote.loading} **Mise à jour en cours...**`,
+        embeds: []
     })
 
     const embed = new EmbedBuilder()
-        .setTitle(`**STATUS ClientXCMS**`)
-        .setDescription(description)
-        .setColor("#2867fa")
+        .setTitle(`**📊 STATUS CLIENTXCMS - LIVE MONITORING**`)
+        .setDescription(`> Surveillance en temps réel des infrastructures critiques`)
+        .setColor(`#2867fa`)
         .setFooter({
-            text: `Mis à jour à ${new Date().toLocaleTimeString()}`,
+            text: `Dernière mise à jour · ClientXCMS Monitoring`,
             iconURL: client.user.displayAvatarURL({ dynamic: true })
         })
+        .setTimestamp();
 
+    Object.keys(datas).forEach(key => {
+        let data = datas[key];
+        embed.addFields(
+            {
+                name: `${client.config.emote.logo} > **${data.name}**`,
+                value: `\`\`\`yaml\n` +
+                `Ping: ${data.ping}\n` +
+                `Historique: ${data.history}\n` +
+                `\`\`\``,
+                inline: false
+            }
+        )
+    });
+
+    embed.addFields({
+        name: `${client.config.emote.logo} > **LÉGENDE DES STATUTS**`,
+        value: `\`\`\`diff\n` +
+        `+ 🟢 En ligne\n` +
+        `! 🟡 Dégradé\n` +
+        `- 🔴 Hors ligne\n` +
+        `\`\`\``,
+        inline: false
+    })
+
+    await Core.sleep(Core.secondes(1));
     await message.edit({
         content: "",
         embeds: [embed]

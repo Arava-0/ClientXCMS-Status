@@ -1,5 +1,4 @@
 const Core = require("../../Core");
-const axios = require('axios');
 
 async function fetchClientXCMSStatusDatas(client, MAX_DELAY_PING = 25000)
 {
@@ -20,28 +19,42 @@ async function fetchClientXCMSStatusDatas(client, MAX_DELAY_PING = 25000)
     return domainsDatas;
 }
 
-
 async function pingDomain(domainUrl, MAX_DELAY_PING, ACTIVE_DELAY = MAX_DELAY_PING) {
     const startTime = Date.now();
 
-    try {
-        await axios.get(domainUrl, { timeout: ACTIVE_DELAY });
-        const endTime = Date.now();
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), MAX_DELAY_PING);
 
+    try {
+        const response = await fetch(domainUrl, {
+            method: 'GET',
+            signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        if (response.status === 200) {
+            return {
+                domain: domainUrl,
+                status: 'online',
+                ping: Date.now() - startTime
+            }
+        }
+    } catch (e) {
+        if (e.name === 'AbortError') {
+            const NEW_MAX_DELAY = ACTIVE_DELAY - (Date.now() - startTime);
+            if (NEW_MAX_DELAY < 5000) return {
+                domain: domainUrl,
+                status: 'offline',
+                ping: -1
+            };
+
+            return await pingDomain(domainUrl, MAX_DELAY_PING, NEW_MAX_DELAY);
+        }
         return {
             domain: domainUrl,
-            status: 'online',
-            ping: endTime - startTime
-        };
-    } catch (error) {
-        const NEW_MAX_DELAY = ACTIVE_DELAY - (Date.now() - startTime);
-        if (NEW_MAX_DELAY < 5000) return {
-            domain: domainUrl,
             status: 'offline',
-            ping: MAX_DELAY_PING - NEW_MAX_DELAY
-        };
-
-        return pingDomain(domainUrl, MAX_DELAY_PING, NEW_MAX_DELAY);
+            ping: -1
+        }
     }
 }
 

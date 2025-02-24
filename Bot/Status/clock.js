@@ -8,9 +8,10 @@ async function launchClientXStatusService(client)
     if (Core.isNullOrUndefined(client.cache.clientXCMSConfig))
         client.cache.clientXCMSConfig = await Core.getConfigFile("datas");
 
+    let history = [];
     cron.schedule('0 * * * * *', async () => {
         let config = client.cache.clientXCMSConfig;
-        console.log(config);
+        // console.log(config);
 
         if (Core.isNullOrUndefined(config) || Core.isNullOrUndefined(config.channelId) || Core.isNullOrUndefined(config.messageId))
             return;
@@ -21,6 +22,20 @@ async function launchClientXStatusService(client)
 
         if (Core.isNullOrUndefined(datas))
             return;
+
+        if (history.length >= 5)
+            history.shift();
+        history.push(datas);
+
+        Object.keys(datas).forEach(key => {
+            let data = datas[key];
+            data.history = history.map(history => {
+                let domain = history.find(h => h.name == data.name);
+                return (domain ? (domain.ping == -1 ? '🔴' : (domain.ping > 5000 ? '🟡' : '🟢')) : '🟢')
+            }).join('');
+        })
+
+        console.log(datas);
 
         await Core.sleep(Core.secondes(30) - delay);
         try {

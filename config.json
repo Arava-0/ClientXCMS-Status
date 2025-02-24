@@ -18,6 +18,8 @@
     "emote": {
         "error": "❎",
         "success": "✅",
-        "warn": "⚠️"
+        "warn": "⚠️",
+        "loading": "<a:Loading:1343567012613459979>",
+        "logo": "<:ClientXCMSLogo:1343566547041521825>"
     }
 }
